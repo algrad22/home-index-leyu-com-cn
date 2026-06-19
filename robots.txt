@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://algrad22.github.io/home-index-leyu-com-cn/sitemap.xml
