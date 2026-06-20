@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问鼎APP · 信息整理与知识索引</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #fff4e6 0%, #ffe4c4 50%, #fed9b0 100%);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #2e241f;
+    }
+
+    .page {
+      max-width: 1120px;
+      width: 100%;
+    }
+
+    /* header / 目录感标题 */
+    .site-header {
+      margin-bottom: 2.5rem;
+      text-align: left;
+      border-left: 6px solid #b47c5e;
+      padding-left: 1.4rem;
+    }
+
+    .site-header h1 {
+      font-size: 2.6rem;
+      font-weight: 450;
+      letter-spacing: 1px;
+      color: #3b2a23;
+      margin-bottom: 0.15rem;
+      line-height: 1.2;
+    }
+
+    .site-header p {
+      font-size: 1.05rem;
+      color: #5f4a3e;
+      max-width: 620px;
+      opacity: 0.85;
+    }
+
+    /* 卡片网格 — 目录式布局 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 2.5rem 0;
+    }
+
+    .card {
+      background: #fffffffa;
+      border-radius: 28px;
+      padding: 1.8rem 1.6rem 2rem;
+      box-shadow: 0 12px 24px -10px rgba(120, 70, 40, 0.14);
+      backdrop-filter: blur(2px);
+      transition: transform 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 32px -12px rgba(110, 65, 30, 0.18);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #4b352b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card h3::before {
+      content: "▹";
+      color: #b47c5e;
+      font-size: 1.5rem;
+    }
+
+    .card p, .card li {
+      color: #3e2f27;
+      font-size: 0.98rem;
+    }
+
+    .card ul {
+      list-style: none;
+      margin-top: 0.4rem;
+    }
+
+    .card ul li {
+      padding: 0.2rem 0 0.2rem 0.6rem;
+      position: relative;
+    }
+
+    .card ul li::before {
+      content: "·";
+      color: #b47c5e;
+      font-weight: bold;
+      margin-right: 0.4rem;
+    }
+
+    /* 说明区域 — 带柔和底色 */
+    .note-area {
+      background: rgba(255, 240, 225, 0.6);
+      backdrop-filter: blur(3px);
+      border-radius: 32px;
+      padding: 1.8rem 2rem;
+      margin: 2.2rem 0;
+      border: 1px solid rgba(185, 130, 90, 0.15);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+
+    .note-area .note-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      color: #a5795b;
+      flex-shrink: 0;
+    }
+
+    .note-area .note-content {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .note-area .note-content p {
+      margin-bottom: 0.6rem;
+    }
+
+    .note-area .note-content .highlight-link {
+      background: #ffffffd9;
+      padding: 0.3rem 1rem 0.3rem 1.2rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 0.3rem;
+      border: 1px solid #dbb99e;
+      transition: background 0.2s;
+    }
+
+    .note-area .note-content .highlight-link:hover {
+      background: #fff3ea;
+    }
+
+    .note-area a {
+      color: #4d3227;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* 提示区 + 相关信息区 合并排列 */
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+      margin: 2rem 0 2.5rem;
+    }
+
+    .info-block {
+      flex: 1 1 200px;
+      background: #ffffffec;
+      border-radius: 24px;
+      padding: 1.5rem 1.6rem;
+      box-shadow: 0 6px 16px -6px rgba(100, 60, 30, 0.08);
+    }
+
+    .info-block h4 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #4d362a;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #edd7c5;
+      padding-bottom: 0.25rem;
+      display: inline-block;
+    }
+
+    .info-block p, .info-block li {
+      font-size: 0.95rem;
+      color: #3f2f25;
+    }
+
+    .info-block ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0.2rem;
+    }
+
+    .info-block ul li {
+      padding: 0.15rem 0;
+    }
+
+    /* FAQ 摘要 */
+    .faq-mini {
+      background: #fffffffa;
+      border-radius: 28px;
+      padding: 1.6rem 2rem 1.8rem;
+      margin: 2rem 0 1.8rem;
+      box-shadow: 0 6px 14px -8px rgba(70, 40, 20, 0.08);
+    }
+
+    .faq-mini h4 {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: #3f2b20;
+      margin-bottom: 0.8rem;
+    }
+
+    .faq-mini details {
+      margin: 0.6rem 0;
+      border-bottom: 1px solid #f0e0d2;
+      padding-bottom: 0.5rem;
+    }
+
+    .faq-mini summary {
+      cursor: pointer;
+      font-weight: 450;
+      color: #4b3527;
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .faq-mini summary::before {
+      content: "❓";
+      margin-right: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .faq-mini details p {
+      margin: 0.5rem 0 0.2rem 1.6rem;
+      color: #3b2c21;
+      font-size: 0.95rem;
+    }
+
+    .faq-mini summary::-webkit-details-marker {
+      display: none;
+    }
+
+    /* 底部 */
+    .site-footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1rem 0 0.2rem;
+      border-top: 1px solid #dcc4b0;
+      color: #5f483b;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    /* 响应式调节 */
+    @media (max-width: 600px) {
+      body { padding: 1.2rem; }
+      .site-header h1 { font-size: 2rem; }
+      .card-grid { gap: 1.2rem; }
+      .note-area { flex-direction: column; gap: 0.8rem; }
+      .info-row { flex-direction: column; }
+      .faq-mini { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 头部：目录感标签 -->
+  <header class="site-header">
+    <h1>📂 资料索引 · 信息单元</h1>
+    <p>围绕「问鼎APP」的整理方式与知识入口，从内容组织与目录结构的角度，提供一份温和而有层次的参考。</p>
+  </header>
+
+  <!-- 目录卡片网格：知识库入口风格 -->
+  <div class="card-grid">
+    <div class="card">
+      <h3>内容结构</h3>
+      <p>笔记、摘录、标签与分类构成基础单元。支持按主题建立目录，每一条资料都可被多次关联，减少信息孤岛。</p>
+      <ul>
+        <li>自定义分类与嵌套标签</li>
+        <li>双向链接与引用计数</li>
+        <li>全文检索 + 筛选视图</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>整理流程</h3>
+      <p>从收集到归档，保持低摩擦。支持临时收件箱、渐进式整理、定期回顾提醒，适合长期积累与维护。</p>
+      <ul>
+        <li>快速采集（剪藏 / 拍照 / 语音）</li>
+        <li>草稿与待分类暂存区</li>
+        <li>回顾间隔自定义</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>索引与检索</h3>
+      <p>通过组合筛选、关键词高亮、时间线、图谱等入口，让资料可以被多维度定位，减少重复查找。</p>
+      <ul>
+        <li>属性筛选 + 布尔逻辑</li>
+        <li>最近编辑 / 高频访问</li>
+        <li>关联图谱与上下文预览</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 说明区：自然嵌入链接 -->
+  <div class="note-area">
+    <div class="note-icon">📌</div>
+    <div class="note-content">
+      <p>资料整理的本质不是囤积，而是建立可回访的秩序。<strong><a href="https://app-home-wending.com">问鼎APP</a></strong> 提供了一种偏向于目录与索引的组织思路，帮助使用者把碎片信息编织为可复用的结构。</p>
+      <p>如果你更习惯用笔记本或文件夹来收纳，也可以借鉴这里的分类逻辑——<span class="highlight-link">🔖 <a href="https://app-home-wending.com">问鼎APP</a></span> 在信息归类上做了不少减法设计，值得了解。</p>
+    </div>
+  </div>
+
+  <!-- 提示区 + 相关信息区 -->
+  <div class="info-row">
+    <div class="info-block">
+      <h4>🧭 提示</h4>
+      <ul>
+        <li>建议先建立 3～5 个顶层目录，避免分类过细</li>
+        <li>每周花 10 分钟整理收件箱，保持索引流动性</li>
+        <li>利用摘要与标签，而非全文堆砌</li>
+        <li>定期清理低价值条目，保持目录精炼</li>
+      </ul>
+    </div>
+    <div class="info-block">
+      <h4>📎 相关信息</h4>
+      <p>同类工具常强调记录速度，而<a href="https://app-home-wending.com" style="color:#4d3227; text-decoration: underline; text-underline-offset: 3px;">问鼎APP</a>更侧重结构沉淀与回顾。部分用户将其用作个人维基或研究笔记的前端入口。</p>
+      <p style="margin-top: 0.4rem;">支持的导入格式：Markdown · 纯文本 · 部分网页摘录 · 图片备注</p>
+    </div>
+  </div>
+
+  <!-- FAQ 摘要 -->
+  <div class="faq-mini">
+    <h4>❔ 简略 FAQ</h4>
+    <details>
+      <summary>问鼎APP 适合哪些资料类型？</summary>
+      <p>读书笔记、项目备忘、课程记录、灵感片段、研究引用等皆可。目录结构可适配文档型与卡片型内容。</p>
+    </details>
+    <details>
+      <summary>信息索引是否会丢失上下文？</summary>
+      <p>每条资料可附带来源链接、创建时间、所属目录，并支持双向关联，上下文得以保留。</p>
+    </details>
+    <details>
+      <summary>有无公开的知识库示例？</summary>
+      <p>目前暂未提供公开模板，但内置了几套分类预设，可基于「问鼎APP」默认目录自行调整。</p>
+    </details>
+  </div>
+
+  <!-- 温和收尾 -->
+  <footer class="site-footer">
+    以目录与索引为线索，让信息可回访 · 温和整理
+  </footer>
+
+</div>
+</body>
+</html>
